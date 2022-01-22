@@ -9,5 +9,5 @@ do
 	    bash $script
 	done
     ) &
-    sleep 60
+    ((i < 10)) && sleep 60
 done
