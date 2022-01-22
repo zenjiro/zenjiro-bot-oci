@@ -5,8 +5,8 @@ do
     (
 	for script in *bot.sh
 	do
-	    echo $script $i
-	    bash $script
+	    echo "$script" $i
+	    bash "$script"
 	done
     ) &
     ((i < 10)) && sleep 60
