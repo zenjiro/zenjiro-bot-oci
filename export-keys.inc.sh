@@ -1,5 +1,5 @@
 #!/bin/bash
-set -u -o pipefail
+set -u
 MY_SCREEN_NAME=$(basename "$0" .sh)
 export MY_SCREEN_NAME
 export MY_LANGUAGE=ja
