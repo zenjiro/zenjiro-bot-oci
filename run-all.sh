@@ -3,7 +3,6 @@ set -u
 
 function export_keys() {
     MY_SCREEN_NAME=$(basename "$1" .sh)
-    echo MY_SCREEN_NAME: "$MY_SCREEN_NAME"
     export MY_SCREEN_NAME
     export MY_LANGUAGE=ja
     eval export CONSUMER_KEY="\$${MY_SCREEN_NAME}_API_KEY"
@@ -17,7 +16,6 @@ do
     (
 	for script in *bot.sh
 	do
-	    echo "$script" $i
 	    export_keys "$script"
 	    bash "$script" > ."${MY_SCREEN_NAME}"-now
 	    psql "$DATABASE_URL" --command="SELECT message FROM status WHERE bot = '$MY_SCREEN_NAME';" --no-align --tuples-only > ."${MY_SCREEN_NAME}"-last
