@@ -11,7 +11,7 @@ function export_keys() {
     eval export ACCESS_TOKEN_SECRET="\$${MY_SCREEN_NAME}_ACCESS_TOKEN_SECRET"
 }
 
-for script in *bot.sh
+for script in *{b,B}ot.sh
 do
     export_keys "$script"
     bash "$script" | python3 truncate.py > ."${MY_SCREEN_NAME}"-now
