@@ -1,4 +1,5 @@
 #!/bin/bash
+# 障害発生状況
 set -u
 red=🔴
 url=$(curl -s -S https://www.uqwimax.jp/information/maintenance/ | grep "ＷｉＭＡＸ２＋通信障害" | head -1 | sed -E "s/.+<a href=\"(.+)\">.+/\\1/")
