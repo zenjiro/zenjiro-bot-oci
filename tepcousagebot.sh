@@ -2,8 +2,6 @@
 set -u
 # shellcheck disable=SC2046
 read -r usage capacity saving hour < <(curl -s -S http://tepco-usage-api.appspot.com/latest.json | jq -r ".usage, .capacity, .saving, .hour" | tr "\n" " ")
-# shellcheck disable=SC2086
-percent=$(printf "%.0f\n" "$(bc -l <<< $usage/$capacity*100)")
 percent=$(((10 * 100 * usage / capacity + 5) / 10))
 usage=$(LC_ALL=en_US.UTF-8 printf "%'d" "$usage")
 capacity=$(LC_ALL=en_US.UTF-8 printf "%'d" "$capacity")
