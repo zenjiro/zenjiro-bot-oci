@@ -13,6 +13,7 @@ function export_keys() {
 
 for script in *{b,B}ot.sh
 do
+    echo "$script"
     export_keys "$script"
     bash "$script" | python3 truncate.py > ."${MY_SCREEN_NAME}"-now
     diff ."${MY_SCREEN_NAME}"-now ."${MY_SCREEN_NAME}"-last > /dev/null || (cat ."${MY_SCREEN_NAME}"-now && ./tweet.sh post < ."${MY_SCREEN_NAME}"-now)
