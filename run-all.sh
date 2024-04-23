@@ -16,14 +16,11 @@ do
     echo "$script"
     export_keys "$script"
     bash "$script" | python3 truncate.py > ."${MY_SCREEN_NAME}"-now
-    diff ."${MY_SCREEN_NAME}"-now ."${MY_SCREEN_NAME}"-last > /dev/null || (cat ."${MY_SCREEN_NAME}"-now && ./tweet.sh post < ."${MY_SCREEN_NAME}"-now)
+    if [[ "${MY_SCREEN_NAME}" =~ "yokohamafirebot" ]]
+    then
+       diff ."${MY_SCREEN_NAME}"-now ."${MY_SCREEN_NAME}"-last > /dev/null || (cat ."${MY_SCREEN_NAME}"-now && python3 post.py "${MY_SCREEN_NAME}" < ."${MY_SCREEN_NAME}"-now)
+    else
+	diff ."${MY_SCREEN_NAME}"-now ."${MY_SCREEN_NAME}"-last > /dev/null || (cat ."${MY_SCREEN_NAME}"-now && ./tweet.sh post < ."${MY_SCREEN_NAME}"-now)
+    fi
     mv ."${MY_SCREEN_NAME}"-{now,last}
-done
-for script in yokohamafirebot.sh
-do
-    echo "$script"
-    screen_name=$(basename "$script" .sh)
-    bash "$script" | python3 truncate.py > ."${screen_name}"-now
-    diff ."${screen_name}"-now ."${screen_name}"-last > /dev/null || (cat ."${screen_name}"-now && python3 post.py "${screen_name}" < ."${screen_name}"-now)
-    mv ."${screen_name}"-{now,last}
 done
