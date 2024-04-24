@@ -16,11 +16,11 @@ do
     echo "$script"
     export_keys "$script"
     bash "$script" | python3 truncate.py > ."${MY_SCREEN_NAME}"-now
-    if [[ "${MY_SCREEN_NAME}" =~ "yokohamafirebot" ]]
+    if [[ "${MY_SCREEN_NAME,,}" =~ ^(yokohamafirebot|wimaxoutagebot)$ ]]
     then
-       diff ."${MY_SCREEN_NAME}"-now ."${MY_SCREEN_NAME}"-last > /dev/null || (cat ."${MY_SCREEN_NAME}"-now && python3 post.py "${MY_SCREEN_NAME}" < ."${MY_SCREEN_NAME}"-now)
+        diff ."${MY_SCREEN_NAME}"-now ."${MY_SCREEN_NAME}"-last > /dev/null || (cat ."${MY_SCREEN_NAME}"-now && python3 post.py "${MY_SCREEN_NAME}" < ."${MY_SCREEN_NAME}"-now)
     else
-	diff ."${MY_SCREEN_NAME}"-now ."${MY_SCREEN_NAME}"-last > /dev/null || (cat ."${MY_SCREEN_NAME}"-now && ./tweet.sh post < ."${MY_SCREEN_NAME}"-now)
+        diff ."${MY_SCREEN_NAME}"-now ."${MY_SCREEN_NAME}"-last > /dev/null || (cat ."${MY_SCREEN_NAME}"-now && ./tweet.sh post < ."${MY_SCREEN_NAME}"-now)
     fi
     mv ."${MY_SCREEN_NAME}"-{now,last}
 done
