@@ -6,10 +6,10 @@ import twikit
 screen_name = sys.argv[1]
 message = sys.stdin.read()
 client = twikit.Client("ja-jp")
-client.load_cookies(f".{screen_name.lower()}.json")
 try:
+    client.load_cookies(f".{screen_name.lower()}.json")
     client.create_tweet(message)
-except twikit.errors.Unauthorized:
+except (twikit.errors.Unauthorized, FileNotFoundError):
     client = twikit.Client("ja-jp")
     client.login(
         auth_info_1=screen_name,
