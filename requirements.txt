@@ -1,1 +1,2 @@
-twikit
+requests
+requests-oauthlib
