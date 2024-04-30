@@ -16,7 +16,7 @@ do
     echo "$script"
     export_keys "$script"
     bash "$script" | python3 truncate.py > ."${MY_SCREEN_NAME}"-now
-    if [[ "${MY_SCREEN_NAME,,}" =~ ^(yokohamafirebot|wimaxoutagebot)$ ]]
+    if [[ "${MY_SCREEN_NAME,,}" =~ ^(ykhmfirebot|wimaxoutagebot)$ ]]
     then
         diff ."${MY_SCREEN_NAME}"-now ."${MY_SCREEN_NAME}"-last > /dev/null || (cat ."${MY_SCREEN_NAME}"-now && python3 post.py "${MY_SCREEN_NAME}" < ."${MY_SCREEN_NAME}"-now)
     else
