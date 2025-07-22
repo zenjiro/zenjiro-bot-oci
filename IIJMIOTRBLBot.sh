@@ -1,8 +1,8 @@
 #!/bin/bash
 set -u
-red=🔴
-green=🟢
-orange=🟠
+readonly red=🔴
+readonly green=🟢
+readonly orange=🟠
 
 # ドコモの通信状況（神奈川県）
 row=$(curl -s -S https://www.docomo.ne.jp/info/status/ | grep -A1 神奈川)
