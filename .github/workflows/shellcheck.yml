@@ -23,6 +23,7 @@ jobs:
         exclude_paths: |
           .git
           .github
+          tweet.sh
         additional_files: '*.sh'
       env:
         SHELLCHECK_OPTS: -e SC1091 -e SC2034 -e SC2155 -e SC2166 -e SC2196 -e SC2001
