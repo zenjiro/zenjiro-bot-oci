@@ -23,6 +23,7 @@ jobs:
         ignore_paths: |
           .git
           .github
+        ignore_names: |
           tweet.sh
         additional_files: '*.sh'
       env:
