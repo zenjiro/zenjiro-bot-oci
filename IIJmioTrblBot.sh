@@ -9,7 +9,8 @@ content=$(curl -s -S "$url" | sed -E -e "s/<[^>]+>//g" -e "s/-->//" -e "s/^\\s+/
 if echo "$content" | grep -q "対応作業により障害は解消\|正常な状態にて運用中\|復旧いたしました"; then
     echo "$content" | sed -E -e "s/(下記に示します内容の障害が発生いたしました。)/$green\\1/"
 elif echo "$content" | grep -q "対応作業中\|調査中"; then
-    echo "$content" | sed -E -e "s/(下記に示します内容の障害が発生いたしました。)/$red\\1/"
+    echo "${red}下記に示します内容の障害が発生いたしました。"
+    echo "$content" | grep -v "^下記に示します内容の障害が発生いたしました。"
 else
     echo "$content" | sed -E -e "s/(下記に示します内容の障害が発生いたしました。)/$green\\1/"
 fi
