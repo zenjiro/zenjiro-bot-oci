@@ -7,11 +7,9 @@ content=$(curl -s -S "$url" | sed -E -e "s/<[^>]+>//g" -e "s/-->//" -e "s/^\\s+/
 
 # Check if the issue is resolved or ongoing
 if echo "$content" | grep -q "対応作業中\|調査中"; then
-    # Ongoing issues: always show red circle
     echo "${red}下記に示します内容の障害が発生いたしました。"
     echo "$content" | grep -v "^下記に示します内容の障害が発生いたしました。"
 else
-    # Resolved or other issues: show green circle
     echo "${green}下記に示します内容の障害が発生いたしました。"
     echo "$content" | grep -v "^下記に示します内容の障害が発生いたしました。"
 fi
