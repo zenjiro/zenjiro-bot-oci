@@ -20,7 +20,7 @@ jobs:
         scandir: '.'
         format: gcc
         severity: warning
-        exclude_paths: |
+        ignore_paths: |
           .git
           .github
           tweet.sh
