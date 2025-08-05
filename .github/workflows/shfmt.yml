@@ -16,7 +16,8 @@ jobs:
       
     - name: Install shfmt
       run: |
-        curl -L "https://github.com/mvdan/sh/releases/latest/download/shfmt_v3.8.0_linux_amd64" -o shfmt
+        SHFMT_VERSION=$(curl -s https://api.github.com/repos/mvdan/sh/releases/latest | grep tag_name | cut -d '"' -f 4)
+        curl -L "https://github.com/mvdan/sh/releases/latest/download/shfmt_${SHFMT_VERSION}_linux_amd64" -o shfmt
         chmod +x shfmt
         sudo mv shfmt /usr/local/bin/
         
