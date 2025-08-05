@@ -25,4 +25,4 @@ jobs:
       run: |
         # Find all .sh files except tweet.sh (external code)
         find . -name "*.sh" ! -name "tweet.sh" ! -path "./.git/*" ! -path "./.github/*" -print0 | \
-        xargs -0 shfmt -d -i 2 -ci -sr
+        xargs -0 shfmt -d -i 4 -ci
