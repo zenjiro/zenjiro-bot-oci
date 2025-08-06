@@ -1,0 +1,30 @@
+name: Shell Format Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  shfmt:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: 'stable'
+        
+    - name: Install shfmt
+      run: go install mvdan.cc/sh/v3/cmd/shfmt@latest
+        
+    - name: Check shell script formatting
+      run: |
+        # Find all .sh files except tweet.sh (external code)
+        echo "Checking shell script formatting..."
+        find . -name "*.sh" ! -name "tweet.sh" ! -path "./.git/*" ! -path "./.github/*" -print0 | \
+        xargs -0 shfmt -d
