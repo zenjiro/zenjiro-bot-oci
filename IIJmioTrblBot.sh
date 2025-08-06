@@ -11,17 +11,9 @@ log_file="iijmiotrblbot-${timestamp}.log"
 
 # Check if content is different from the most recent log file
 latest_log=$(ls -t iijmiotrblbot-*.log 2>/dev/null | head -1)
-if [ -n "$latest_log" ] && [ -f "$latest_log" ]; then
-    if echo "$raw_content" | diff -q "$latest_log" - >/dev/null 2>&1; then
-        # Content is the same, don't save new log file
-        :
-    else
-        # Content is different, save new log file
-        echo "$raw_content" > "$log_file"
-    fi
-else
-    # No previous log file exists, save new log file
-    echo "$raw_content" > "$log_file"
+if ! [ -f "$latest_log" ] || ! printf "%s" "$raw_content" | diff -q "$latest_log" - >/dev/null 2>&1; then
+    # Content is different or no previous log exists, save new log file
+    printf "%s" "$raw_content" > "$log_file"
 fi
 
 content=$(echo "$raw_content" | sed -E -e "s/<[^>]+>//g" -e "s/-->//" -e "s/^\\s+//" -e "/^$/d" -e "s/。ご迷惑を.+/。/" | awk "/^下記に示します/,/^影響サービス/;/^現象/,/^備考/" | grep -v -E -e "^＜ 記 ＞" -e "^影響サービス" -e "^備考|^以上" | tr "\n" "_" | sed "s/:_/：/g" | tr "_" "\n")
