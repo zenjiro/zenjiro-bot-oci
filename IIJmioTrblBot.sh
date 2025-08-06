@@ -16,7 +16,7 @@ if ! [ -f "$latest_log" ] || ! printf "%s" "$raw_content" | diff -q "$latest_log
     printf "%s" "$raw_content" > "$log_file"
 fi
 
-content=$(echo "$raw_content" | sed -E -e "s/<[^>]+>//g" -e "s/-->//" -e "s/^\\s+//" -e "/^$/d" -e "s/。ご迷惑を.+/。/" | awk "/^下記に示します/,/^影響サービス/;/^現象/,/^備考/" | grep -v -E -e "^＜ 記 ＞" -e "^影響サービス" -e "^備考|^以上" | tr "\n" "_" | sed "s/:_/：/g" | tr "_" "\n")
+content=$(printf "%s" "$raw_content" | sed -E -e "s/<[^>]+>//g" -e "s/-->//" -e "s/^\s+//" -e "/^$/d" -e "s/。ご迷惑を.+/。/" | awk "/^下記に示します/,/^影響サービス/;/^現象/,/^備考/" | grep -v -E -e "^＜ 記 ＞" -e "^影響サービス" -e "^備考|^以上" | tr "\n" "_" | sed "s/:_/：/g" | tr "_" "\n")
 
 # Check if content is empty or invalid
 if [ -z "$content" ] || ! grep -q "下記に示します" <<< "$content"; then
