@@ -27,4 +27,4 @@ jobs:
         # Find all .sh files except tweet.sh (external code)
         echo "Checking shell script formatting..."
         find . -name "*.sh" ! -name "tweet.sh" ! -path "./.git/*" ! -path "./.github/*" -print0 | \
-        xargs -0 shfmt -d -i 4 -ci || echo "Warning: Some formatting differences found, but not failing the build"
+        xargs -0 shfmt -d
