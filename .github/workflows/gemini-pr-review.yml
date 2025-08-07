@@ -216,7 +216,7 @@ jobs:
             const reviewOutput = process.env.REVIEW_OUTPUT;
             const prNumber = process.env.PR_NUMBER;
             
-            const comment = `## 🤖 Gemini AI Code Review
+            const comment = `## 🤖 Gemini AI Code Review (by gemini-pr-review.yml)
 
             ${reviewOutput}
 
