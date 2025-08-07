@@ -95,7 +95,9 @@ jobs:
           WORKFLOW_PR_NUMBER: '${{ github.event.inputs.pr_number }}'
           PULL_REQUEST_NUMBER: '${{ github.event.pull_request.number }}'
           ISSUE_NUMBER: '${{ github.event.issue.number }}'
+          # The following two lines are the suggested change
           COMMENT_BODY: '${{ github.event.comment.body }}'
+          REVIEW_BODY: '${{ github.event.review.body }}'
         run: |-
           set -euo pipefail
 
@@ -111,9 +113,16 @@ jobs:
           echo "pr_number=${PR_NUMBER}" >> "${GITHUB_OUTPUT}"
 
           # Extract additional instructions from comment if present
+          BODY=""
+          if [[ "${EVENT_NAME}" = "issue_comment" || "${EVENT_NAME}" = "pull_request_review_comment" ]]; then
+            BODY="${COMMENT_BODY}"
+          elif [[ "${EVENT_NAME}" = "pull_request_review" ]]; then
+            BODY="${REVIEW_BODY}"
+          fi
+          
           ADDITIONAL_INSTRUCTIONS=""
-          if [[ "${EVENT_NAME}" = "issue_comment" || "${EVENT_NAME}" = "pull_request_review_comment" || "${EVENT_NAME}" = "pull_request_review" ]]; then
-            ADDITIONAL_INSTRUCTIONS="$(echo "${COMMENT_BODY}" | sed 's/.*@gemini-cli \/review//' | xargs || true)"
+          if [[ -n "${BODY}" ]]; then
+            ADDITIONAL_INSTRUCTIONS="$(echo "${BODY}" | sed 's/.*@gemini-cli \/review//' | xargs || true)"
           fi
           echo "additional_instructions=${ADDITIONAL_INSTRUCTIONS}" >> "${GITHUB_OUTPUT}"
 
