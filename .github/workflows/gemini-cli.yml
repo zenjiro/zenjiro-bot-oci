@@ -94,7 +94,6 @@ jobs:
         with:
           app-id: '${{ vars.APP_ID }}'
           private-key: '${{ secrets.APP_PRIVATE_KEY }}'
-
       - name: 'Get context from event'
         id: 'get_context'
         env:
@@ -202,9 +201,9 @@ jobs:
         run: |-
           set -euo pipefail
           if [[ "${IS_PR}" == "true" ]]; then
-            COMMENTS=$(gh pr view "${ISSUE_NUMBER}" --json comments --template '{{range .comments}}{{.author.login}}: {{.body}}{{"\n"}}{{end}}')
+            COMMENTS=$(gh pr view "${ISSUE_NUMBER}" --json comments --template '{{range .comments}}{{.author.login}}: {{.body}}{"\n"}}{{end}}')
           else
-            COMMENTS=$(gh issue view "${ISSUE_NUMBER}" --json comments --template '{{range .comments}}{{.author.login}}: {{.body}}{{"\n"}}{{end}}')
+            COMMENTS=$(gh issue view "${ISSUE_NUMBER}" --json comments --template '{{range .comments}}{{.author.login}}: {{.body}}{"\n"}}{{end}}')
           fi
           {
             echo "comments<<EOF"
@@ -231,7 +230,7 @@ jobs:
           IS_PR: '${{ steps.get_context.outputs.is_pr }}'
           DESCRIPTION: '${{ steps.get_description.outputs.description }}'
           COMMENTS: '${{ steps.get_comments.outputs.comments }}'
-        run: |
+        run: |-
           set -euo pipefail
           if [ -z "$GEMINI_API_KEY" ]; then
             echo "GEMINI_API_KEY is not set. Please set it as a repository secret."
@@ -322,3 +321,16 @@ jobs:
           
           # Run Gemini
           gemini -p "$(cat final_prompt.txt)"
+
+      - name: 'Post Failure Comment'
+        if: failure()
+        env:
+          GITHUB_TOKEN: '${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}'
+          ISSUE_NUMBER: '${{ steps.get_context.outputs.issue_number }}'
+          REPOSITORY: '${{ github.repository }}'
+        run: |-
+          set -euo pipefail
+          MESSAGE=" Oops! Something went wrong while processing your request. Please check the [action logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details."
+          gh issue comment "${ISSUE_NUMBER}" \
+            --body "${MESSAGE}" \
+            --repo "${REPOSITORY}"
