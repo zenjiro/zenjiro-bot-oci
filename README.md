@@ -13,5 +13,5 @@ $ export $(xargs < environment) && ./run-all.sh
 tweet.shは除外してフォーマットを実行してください。
 
 ```
-$ shfmt -w $(find . -name "*.sh" -not -name "tweet.sh")
+$ find . -name "*.sh" -not -name "tweet.sh" -exec shfmt -w {} +
 ```
