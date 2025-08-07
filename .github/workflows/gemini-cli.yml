@@ -285,7 +285,7 @@ jobs:
                - **NEVER commit directly to the `main` branch.**
                - If you are working on a **pull request** (`IS_PR` is `true`), the correct branch is already checked out. Simply commit and push to it.
                  - `git add .`
-                 - `git commit -m "feat: <describe the change>"`
+                 - `git commit -m "<type>: <describe the change>"` (e.g., `fix:`, `feat:`, `docs:`)
                  - `git push`
                - If you are working on an **issue** (`IS_PR` is `false`), create a new branch for your changes. A good branch name would be `issue/${ISSUE_NUMBER}/<short-description>`.
                  - `git checkout -b issue/${ISSUE_NUMBER}/my-fix`
