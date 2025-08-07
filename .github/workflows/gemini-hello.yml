@@ -100,21 +100,21 @@ jobs:
           exit 1
         fi
         
-        # Create a prompt for code review
-        cat > review_prompt.txt << 'EOF'
+        # Create a prompt for code review by directly constructing it
+        cat > final_prompt.txt << EOF
         You are an expert code reviewer. Please review the following pull request changes and provide constructive feedback.
 
         ## Pull Request Information
-        **Title:** $PR_TITLE
-        **Description:** $PR_BODY
+        **Title:** ${PR_TITLE}
+        **Description:** ${PR_BODY}
 
         ## Changed Files
-        $CHANGED_FILES
+        ${CHANGED_FILES}
 
         ## Code Changes (Diff)
-        ```diff
-        $DIFF_CONTENT
-        ```
+        \`\`\`diff
+        ${DIFF_CONTENT}
+        \`\`\`
 
         ## Review Guidelines
         Please focus on:
@@ -134,8 +134,11 @@ jobs:
         Format your response in markdown for easy reading.
         EOF
         
-        # Replace environment variables in the prompt
-        envsubst < review_prompt.txt > final_prompt.txt
+        # Debug: Show the prompt being sent (first 500 chars)
+        echo "=== Prompt Preview ==="
+        head -c 500 final_prompt.txt
+        echo ""
+        echo "=== End Preview ==="
         
         # Run Gemini review
         REVIEW_OUTPUT=$(gemini -p "$(cat final_prompt.txt)")
