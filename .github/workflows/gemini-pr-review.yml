@@ -189,6 +189,7 @@ jobs:
           - Overall assessment (Approve/Request Changes/Comment)
 
           Format your response in markdown for easy reading.
+          Write in Japanese.
           EOF
           
           # Debug: Show the prompt being sent (first 500 chars)
@@ -216,7 +217,7 @@ jobs:
             const reviewOutput = process.env.REVIEW_OUTPUT;
             const prNumber = process.env.PR_NUMBER;
             
-            const comment = `## 🤖 Gemini AI Code Review (by gemini-pr-review.yml)
+            const comment = `## 🤖 Gemini AI Code Review
 
             ${reviewOutput}
 
