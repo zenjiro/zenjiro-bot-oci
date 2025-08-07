@@ -89,9 +89,9 @@ jobs:
         ${CHANGED_FILES}
 
         ## Code Changes (Diff)
-        \`\`\`diff
+        ```diff
         ${DIFF_CONTENT}
-        \`\`\`
+        ```
 
         ## Review Guidelines
         Please focus on:
@@ -118,7 +118,12 @@ jobs:
         echo "=== End Preview ==="
         
         # Run Gemini review
-        REVIEW_OUTPUT=$(gemini "$(cat final_prompt.txt)" 2>/dev/null || echo "Review generation failed. Please review manually.")
+        REVIEW_OUTPUT=$(gemini "$(cat final_prompt.txt)" 2>gemini_error.log || echo "Review generation failed. Please review manually.")
+        
+        if [ -s gemini_error.log ]; then
+          echo "Gemini CLI Error:"
+          cat gemini_error.log
+        fi
         
         # Save review output
         echo "review_output<<EOF" >> $GITHUB_OUTPUT
