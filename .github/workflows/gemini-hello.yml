@@ -18,4 +18,11 @@ jobs:
     - name: Install Gemini CLI
       run: npm install -g @google/gemini-cli
     - name: Run Gemini Hello
-      run: gemini -p hello
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      run: |
+        if [ -z "$GEMINI_API_KEY" ]; then
+          echo "GEMINI_API_KEY is not set. Please set it as a repository secret."
+          exit 1
+        fi
+        gemini -p hello
