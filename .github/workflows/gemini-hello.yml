@@ -1,8 +1,6 @@
-name: 'Gemini Hello World with Code Review'
+name: 'Gemini Code Review'
 
 on:
-  workflow_dispatch:
-  push:
   pull_request:
     types:
       - opened
@@ -14,30 +12,9 @@ permissions:
   issues: write
 
 jobs:
-  hello:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '24'
-    - name: Install Gemini CLI
-      run: npm install -g @google/gemini-cli
-    - name: Run Gemini Hello
-      env:
-        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      run: |
-        if [ -z "$GEMINI_API_KEY" ]; then
-          echo "GEMINI_API_KEY is not set. Please set it as a repository secret."
-          exit 1
-        fi
-        gemini -p hello
-
   code-review:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    needs: hello
     
     steps:
     - name: Checkout PR code
