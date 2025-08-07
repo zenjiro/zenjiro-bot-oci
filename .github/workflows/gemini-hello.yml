@@ -147,10 +147,14 @@ jobs:
         
     - name: Post Review Comment
       uses: actions/github-script@v7
+      env:
+        REVIEW_OUTPUT: ${{ steps.gemini-review.outputs.review_output }}
+        PR_NUMBER: ${{ steps.pr-changes.outputs.pr_number }}
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const reviewOutput = `${{ steps.gemini-review.outputs.review_output }}`;
+          const reviewOutput = process.env.REVIEW_OUTPUT;
+          const prNumber = process.env.PR_NUMBER;
           
           const comment = `## 🤖 Gemini AI Code Review
 
@@ -162,6 +166,6 @@ jobs:
           github.rest.issues.createComment({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            issue_number: ${{ steps.pr-changes.outputs.pr_number }},
+            issue_number: parseInt(prNumber),
             body: comment
           });
