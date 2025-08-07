@@ -7,3 +7,11 @@ $ pip3 install -r requirements.txt
 ```
 # 実行
 $ export $(xargs < environment) && ./run-all.sh
+
+# コードフォーマット
+シェルスクリプトのフォーマットを統一するため、shfmtを使用します。
+tweet.shは除外してフォーマットを実行してください。
+
+```
+$ find . -name "*.sh" -not -name "tweet.sh" -exec shfmt -w {} +
+```
