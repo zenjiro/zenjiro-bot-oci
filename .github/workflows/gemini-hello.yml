@@ -118,7 +118,7 @@ jobs:
         echo "=== End Preview ==="
         
         # Run Gemini review
-        REVIEW_OUTPUT=$(gemini -p "$(cat final_prompt.txt)")
+        REVIEW_OUTPUT=$(gemini "$(cat final_prompt.txt)" 2>/dev/null || echo "Review generation failed. Please review manually.")
         
         # Save review output
         echo "review_output<<EOF" >> $GITHUB_OUTPUT
