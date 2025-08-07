@@ -63,6 +63,14 @@ jobs:
           ISSUE_COUNT="$(echo "${ISSUES}" | jq 'length')"
           echo "✅ Found ${ISSUE_COUNT} issues to triage! 🎯"
 
+      - name: 'Setup Node.js'
+        uses: 'actions/setup-node@v4'
+        with:
+          node-version: '24'
+          
+      - name: 'Install Gemini CLI'
+        run: npm install -g @google/gemini-cli
+
       - name: 'Run Gemini Issue Triage'
         if: |-
           ${{ steps.find_issues.outputs.issues_to_triage != '[]' }}

@@ -55,6 +55,14 @@ jobs:
           app-id: '${{ vars.APP_ID }}'
           private-key: '${{ secrets.APP_PRIVATE_KEY }}'
 
+      - name: 'Setup Node.js'
+        uses: 'actions/setup-node@v4'
+        with:
+          node-version: '24'
+          
+      - name: 'Install Gemini CLI'
+        run: npm install -g @google/gemini-cli
+
       - name: 'Run Gemini Issue Triage'
         id: 'gemini_issue_triage'
         env:

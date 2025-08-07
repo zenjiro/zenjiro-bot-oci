@@ -213,6 +213,14 @@ jobs:
             echo "EOF"
           } >> "${GITHUB_OUTPUT}"
 
+      - name: 'Setup Node.js'
+        uses: 'actions/setup-node@v4'
+        with:
+          node-version: '24'
+          
+      - name: 'Install Gemini CLI'
+        run: npm install -g @google/gemini-cli
+
       - name: 'Run Gemini'
         id: 'run_gemini'
         env:
