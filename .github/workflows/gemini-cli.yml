@@ -211,6 +211,25 @@ jobs:
             echo "EOF"
           } >> "${GITHUB_OUTPUT}"
 
+      - name: 'Decide whether to run Gemini'
+        id: 'decide_run'
+        env:
+          USER_REQUEST: '${{ steps.get_context.outputs.user_request }}'
+          DESCRIPTION: '${{ steps.get_description.outputs.description }}'
+        run: |-
+          set -euo pipefail
+          TRIMMED=$(echo "${USER_REQUEST}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+          LOWER=$(echo "${TRIMMED}" | tr '[:upper:]' '[:lower:]')
+          SHOULD_RUN="true"
+          if [[ -z "${TRIMMED}" && -z "${DESCRIPTION}" ]]; then
+            SHOULD_RUN="false"
+          elif echo "${LOWER}" | grep -Eq '^(hi|hello|hey|yo|test|ping|thanks|thank you)[[:space:]!！。…-]*$'; then
+            SHOULD_RUN="false"
+          elif echo "${TRIMMED}" | grep -Eq '^(こんにちは|やあ|テスト|ありがとう|お疲れ様|おつかれさま|よろしく|よろしくお願いします)[[:space:]!！。…-]*$'; then
+            SHOULD_RUN="false"
+          fi
+          echo "should_run=${SHOULD_RUN}" >> "${GITHUB_OUTPUT}"
+
       - name: 'Setup Node.js'
         uses: 'actions/setup-node@v4'
         with:
@@ -220,6 +239,7 @@ jobs:
         run: npm install -g @google/gemini-cli
 
       - name: 'Run Gemini'
+        if: ${{ steps.decide_run.outputs.should_run == 'true' }}
         id: 'run_gemini'
         env:
           GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
