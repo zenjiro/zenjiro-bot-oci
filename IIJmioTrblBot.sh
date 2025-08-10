@@ -1,8 +1,8 @@
 #!/bin/bash
 set -u
 red=🔴
-green=🟢
 orange=🟠
+green=🟢
 url="https://www.iijmio.jp"$(curl -s -S https://www.iijmio.jp/info/trouble/ | grep "障害発生報告" | head -1 | sed -E -e "s/.+<a href=\"([^\"]+)\">.+/\\1/")
 
 # Get raw content and save to timestamped log file
