@@ -14,8 +14,7 @@ indent_style = space
 indent_size = 2
 
 [*.{sh,bash}]
-indent_style = space
-indent_size = 2
+indent_style = tab
 
 [*.py]
 indent_style = space
