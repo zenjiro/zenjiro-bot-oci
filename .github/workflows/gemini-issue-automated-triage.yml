@@ -16,7 +16,7 @@ on:
         type: 'number'
 
 concurrency:
-  group: '${{ github.workflow }}-${{ github.event.issue.number }}'
+  group: '${{ github.workflow }}-${{ github.event.issue.number || github.event.inputs.issue_number || github.run_id }}'
   cancel-in-progress: true
 
 defaults:
@@ -68,10 +68,21 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}'
         run: |
+          set -euo pipefail
           issue_data=$(gh api repos/${{ github.repository }}/issues/${{ github.event.inputs.issue_number }})
-          echo "title=$(echo "$issue_data" | jq -r '.title')" >> $GITHUB_OUTPUT
-          echo "body=$(echo "$issue_data" | jq -r '.body // ""')" >> $GITHUB_OUTPUT
-          echo "number=$(echo "$issue_data" | jq -r '.number')" >> $GITHUB_OUTPUT
+          title=$(echo "$issue_data" | jq -r '.title // ""')
+          body=$(echo "$issue_data" | jq -r '.body // ""')
+          number=$(echo "$issue_data" | jq -r '.number // ""')
+
+          {
+            echo "title<<EOF"
+            echo "$title"
+            echo "EOF"
+            echo "body<<EOF"
+            echo "$body"
+            echo "EOF"
+            echo "number=$number"
+          } >> "$GITHUB_OUTPUT"
 
       - name: 'Run Gemini Issue Triage'
         id: 'gemini_issue_triage'
