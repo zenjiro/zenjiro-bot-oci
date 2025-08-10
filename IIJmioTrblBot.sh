@@ -2,6 +2,7 @@
 set -u
 red=🔴
 green=🟢
+orange=🟠
 url="https://www.iijmio.jp"$(curl -s -S https://www.iijmio.jp/info/trouble/ | grep "障害発生報告" | head -1 | sed -E -e "s/.+<a href=\"([^\"]+)\">.+/\\1/")
 
 # Get raw content and save to timestamped log file
@@ -25,7 +26,13 @@ if [ -z "$content" ] || ! grep -q "下記に示します" <<<"$content"; then
 fi
 
 # Check if the issue is resolved or ongoing
-if echo "$content" | grep -q "対応作業中\|調査中"; then
+if echo "$content" | grep -q "対応作業中"; then
+	echo "${red}下記に示します内容の障害が発生いたしました。"
+	echo "$content" | grep -v "^下記に示します内容の障害が発生いたしました。"
+elif echo "$content" | grep -q "調査中" && echo "$content" | grep -q "正常な状態"; then
+	echo "${orange}下記に示します内容の障害が発生いたしました。"
+	echo "$content" | grep -v "^下記に示します内容の障害が発生いたしました。"
+elif echo "$content" | grep -q "調査中"; then
 	echo "${red}下記に示します内容の障害が発生いたしました。"
 	echo "$content" | grep -v "^下記に示します内容の障害が発生いたしました。"
 else
