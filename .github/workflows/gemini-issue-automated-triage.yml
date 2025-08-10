@@ -67,9 +67,10 @@ jobs:
         id: 'fetch_issue'
         env:
           GITHUB_TOKEN: '${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}'
+          GH_TOKEN: '${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}'
         run: |
           set -euo pipefail
-          issue_data=$(gh api repos/${{ github.repository }}/issues/${{ github.event.inputs.issue_number }})
+          issue_data=$(gh issue view "${{ github.event.inputs.issue_number }}" --repo "${{ github.repository }}" --json title,body,number)
           title=$(echo "$issue_data" | jq -r '.title // ""')
           body=$(echo "$issue_data" | jq -r '.body // ""')
           number=$(echo "$issue_data" | jq -r '.number // ""')
