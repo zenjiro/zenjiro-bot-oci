@@ -62,14 +62,25 @@ jobs:
       - name: 'Install Gemini CLI'
         run: npm install -g @google/gemini-cli
 
+      - name: 'Fetch Issue Data for Manual Dispatch'
+        if: github.event_name == 'workflow_dispatch'
+        id: 'fetch_issue'
+        env:
+          GITHUB_TOKEN: '${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}'
+        run: |
+          issue_data=$(gh api repos/${{ github.repository }}/issues/${{ github.event.inputs.issue_number }})
+          echo "title=$(echo "$issue_data" | jq -r '.title')" >> $GITHUB_OUTPUT
+          echo "body=$(echo "$issue_data" | jq -r '.body // ""')" >> $GITHUB_OUTPUT
+          echo "number=$(echo "$issue_data" | jq -r '.number')" >> $GITHUB_OUTPUT
+
       - name: 'Run Gemini Issue Triage'
         id: 'gemini_issue_triage'
         env:
           GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
           GITHUB_TOKEN: '${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}'
-          ISSUE_TITLE: '${{ github.event.issue.title }}'
-          ISSUE_BODY: '${{ github.event.issue.body }}'
-          ISSUE_NUMBER: '${{ github.event.issue.number }}'
+          ISSUE_TITLE: '${{ github.event.issue.title || steps.fetch_issue.outputs.title }}'
+          ISSUE_BODY: '${{ github.event.issue.body || steps.fetch_issue.outputs.body }}'
+          ISSUE_NUMBER: '${{ github.event.issue.number || github.event.inputs.issue_number }}'
           REPOSITORY: '${{ github.repository }}'
         run: |
           set -euo pipefail
@@ -111,9 +122,10 @@ jobs:
         with:
           github-token: '${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}'
           script: |-
+            const issueNumber = '${{ github.event.issue.number || github.event.inputs.issue_number }}';
             github.rest.issues.createComment({
               owner: '${{ github.repository }}'.split('/')[0],
               repo: '${{ github.repository }}'.split('/')[1],
-              issue_number: '${{ github.event.issue.number }}',
+              issue_number: parseInt(issueNumber),
               body: 'There is a problem with the Gemini CLI issue triaging. Please check the [action logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.'
             })
