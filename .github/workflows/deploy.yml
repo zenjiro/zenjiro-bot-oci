@@ -18,6 +18,7 @@ jobs:
     - name: Deploy to Oracle Cloud VM
       run: |
         ssh -i ~/.ssh/deploy_key ${{ secrets.OCI_VM_USER }}@${{ secrets.OCI_VM_HOST }} << 'EOF'
+          set -e
           cd ${{ secrets.OCI_BOT_DIRECTORY || '/home/opc/zenjiro-bot-oci' }}
           echo "Creating backup..."
           cp -r . ../zenjiro-bot-oci-backup-$(date +%Y%m%d-%H%M%S) || true
@@ -29,6 +30,7 @@ jobs:
     - name: Verify deployment
       run: |
         ssh -i ~/.ssh/deploy_key ${{ secrets.OCI_VM_USER }}@${{ secrets.OCI_VM_HOST }} << 'EOF'
+          set -e
           cd ${{ secrets.OCI_BOT_DIRECTORY || '/home/opc/zenjiro-bot-oci' }}
           echo "Current git status:"
           git log -1 --oneline
