@@ -8,6 +8,12 @@ $ pip3 install -r requirements.txt
 # 実行
 $ export $(xargs < environment) && ./run-all.sh
 
+## cron設定
+ボットを定期的に実行するため、cronで以下のコマンドを設定してください：
+```
+cd /path/to/directory && export $(xargs < environment) && ./run-all.sh
+```
+
 # コードフォーマット
 シェルスクリプトのフォーマットを統一するため、shfmtを使用します。
 tweet.shは除外してフォーマットを実行してください。
