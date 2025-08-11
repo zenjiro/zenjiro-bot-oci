@@ -22,6 +22,8 @@ jobs:
           cd ${{ secrets.OCI_BOT_DIRECTORY || '/home/opc/zenjiro-bot-oci' }}
           echo "Creating backup..."
           cp -r . ../zenjiro-bot-oci-backup-$(date +%Y%m%d-%H%M%S)
+          echo "Cleaning up old backups..."
+          find .. -name 'zenjiro-bot-oci-backup-*' -mtime +7 -exec rm -rf {} \;
           echo "Pulling latest changes from GitHub..."
           git fetch origin
           git reset --hard origin/main
