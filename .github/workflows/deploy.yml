@@ -14,7 +14,7 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.OCI_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
         chmod 600 ~/.ssh/deploy_key
-        ssh-keyscan -H ${{ secrets.OCI_VM_HOST }} >> ~/.ssh/known_hosts
+        echo "${{ secrets.OCI_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
     - name: Deploy to Oracle Cloud VM
       run: |
         ssh -i ~/.ssh/deploy_key ${{ secrets.OCI_VM_USER }}@${{ secrets.OCI_VM_HOST }} << 'EOF'

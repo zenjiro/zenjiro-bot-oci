@@ -23,9 +23,14 @@ GitHubリポジトリの Settings > Secrets and variables > Actions で以下の
    - Oracle Cloudのデフォルト: `opc`
    - Ubuntu VMの場合: `ubuntu`
 
+4. **OCI_KNOWN_HOSTS**
+   - VMのSSHホストキー（事前検証済み）
+   - 取得方法: `ssh-keyscan -H YOUR_VM_IP`で取得
+   - 例: `123.456.789.012 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA...`
+
 ### オプションシークレット
 
-4. **OCI_BOT_DIRECTORY** (オプション)
+5. **OCI_BOT_DIRECTORY** (オプション)
    - VMでのボットプロジェクトのディレクトリパス
    - デフォルト: `/home/opc/zenjiro-bot-oci`
    - 例: `/home/ubuntu/bots/zenjiro-bot-oci`
@@ -78,6 +83,15 @@ chmod +x *.sh
 ```
 
 ## セキュリティ考慮事項
+
+### SSHホストキーの事前検証
+```bash
+# ローカルマシンからホストキーを取得
+ssh-keyscan -H YOUR_VM_IP
+
+# 出力例（これをOCI_KNOWN_HOSTSシークレットに設定）
+123.456.789.012 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA...
+```
 
 ### ファイアウォール設定
 - SSH (ポート22) のみを許可
