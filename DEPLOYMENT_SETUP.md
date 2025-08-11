@@ -118,21 +118,10 @@ PermitRootLogin no
 1. mainブランチにコードをpush
 2. GitHub Actionsが自動的にトリガー
 3. VMにSSH接続
-4. 既存のボットプロセスを停止
+4. 現在のバージョンをバックアップ
 5. 最新コードをpull
-6. 依存関係を更新（必要に応じて）
-7. ボットを再起動
-8. デプロイ結果を確認
+6. デプロイ結果を確認
 
 ## 手動デプロイ
 
 GitHub ActionsのUIから「Run workflow」ボタンでも手動実行可能です。
-
-## ログの確認
-
-デプロイ後のログは以下で確認できます：
-```bash
-# VMにSSH接続して
-cd /home/opc/zenjiro-bot-oci
-tail -f bot.log
-```
