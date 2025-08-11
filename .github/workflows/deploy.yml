@@ -19,8 +19,6 @@ jobs:
       run: |
         ssh -i ~/.ssh/deploy_key ${{ secrets.OCI_VM_USER }}@${{ secrets.OCI_VM_HOST }} << 'EOF'
           cd ${{ secrets.OCI_BOT_DIRECTORY || '/home/opc/zenjiro-bot-oci' }}
-          echo "Current bot processes:"
-          ps aux | grep -E "(run-all|bot\.sh)" | grep -v grep || echo "No bot processes currently running"
           echo "Creating backup..."
           cp -r . ../zenjiro-bot-oci-backup-$(date +%Y%m%d-%H%M%S) || true
           echo "Pulling latest changes from GitHub..."
@@ -30,7 +28,6 @@ jobs:
         EOF
     - name: Verify deployment
       run: |
-        echo "Deployment completed. Checking if bots are running..."
         ssh -i ~/.ssh/deploy_key ${{ secrets.OCI_VM_USER }}@${{ secrets.OCI_VM_HOST }} << 'EOF'
           cd ${{ secrets.OCI_BOT_DIRECTORY || '/home/opc/zenjiro-bot-oci' }}
           echo "Current git status:"
