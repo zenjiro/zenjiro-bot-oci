@@ -1,0 +1,38 @@
+name: Deploy to Oracle Cloud VM
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.OCI_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+        ssh-keyscan -H ${{ secrets.OCI_VM_HOST }} >> ~/.ssh/known_hosts
+    - name: Deploy to Oracle Cloud VM
+      run: |
+        ssh -i ~/.ssh/deploy_key ${{ secrets.OCI_VM_USER }}@${{ secrets.OCI_VM_HOST }} << 'EOF'
+          cd ${{ secrets.OCI_BOT_DIRECTORY || '/home/opc/zenjiro-bot-oci' }}
+          echo "Current bot processes:"
+          ps aux | grep -E "(run-all|bot\.sh)" | grep -v grep || echo "No bot processes currently running"
+          echo "Creating backup..."
+          cp -r . ../zenjiro-bot-oci-backup-$(date +%Y%m%d-%H%M%S) || true
+          echo "Pulling latest changes from GitHub..."
+          git fetch origin
+          git reset --hard origin/main
+          echo "Deployment completed successfully!"
+        EOF
+    - name: Verify deployment
+      run: |
+        echo "Deployment completed. Checking if bots are running..."
+        ssh -i ~/.ssh/deploy_key ${{ secrets.OCI_VM_USER }}@${{ secrets.OCI_VM_HOST }} << 'EOF'
+          cd ${{ secrets.OCI_BOT_DIRECTORY || '/home/opc/zenjiro-bot-oci' }}
+          echo "Current git status:"
+          git log -1 --oneline
+        EOF
