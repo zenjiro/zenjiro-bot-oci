@@ -87,7 +87,7 @@ jobs:
           fi
           
           # Create a prompt for code review
-          cat > final_prompt.txt << EOF
+          cat > final_prompt.txt << 'EOF'
           ## Role
           You are an issue triage assistant. Analyze issues and apply
           appropriate labels. Use the available tools to gather information;
