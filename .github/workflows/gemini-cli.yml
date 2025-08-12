@@ -238,7 +238,7 @@ jobs:
           fi
           
           # Create a prompt for code review
-          cat > final_prompt.txt << EOF
+          cat > final_prompt.txt << 'EOF'
           ## Role
           You are a helpful AI assistant invoked via a CLI interface in a GitHub workflow. You have access to tools to interact with the repository and respond to the user.
           ## Context
@@ -330,7 +330,17 @@ jobs:
           REPOSITORY: '${{ github.repository }}'
         run: |-
           set -euo pipefail
-          MESSAGE=" Oops! Something went wrong while processing your request. Please check the [action logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details."
+          MESSAGE=" 問題が発生しました。詳細は [アクションのログ](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) をご確認ください。"
           gh issue comment "${ISSUE_NUMBER}" \
             --body "${MESSAGE}" \
             --repo "${REPOSITORY}"
+
+      - name: 'Post Japanese Job Summary'
+        run: |-
+          set -euo pipefail
+          {
+            echo "## Gemini CLI 実行概要"
+            echo ""
+            echo "- すべての応答・コメントは日本語で投稿されます"
+            echo "- 失敗時のエラーメッセージも日本語で通知されます"
+          } >> "${GITHUB_STEP_SUMMARY}"

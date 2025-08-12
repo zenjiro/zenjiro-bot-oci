@@ -165,7 +165,7 @@ jobs:
           fi
           
           # Create a prompt for code review
-          cat > final_prompt.txt << EOF
+          cat > final_prompt.txt << 'EOF'
           You are an expert code reviewer. Please review the following pull request changes and provide constructive feedback.
 
           ## Pull Request Information
@@ -233,6 +233,26 @@ jobs:
               issue_number: parseInt(prNumber),
               body: comment
             });
+
+      - name: 'Post Japanese Job Summary'
+        env:
+          PR_NUMBER: '${{ steps.get_pr.outputs.pr_number }}'
+          PR_DATA: '${{ steps.get_pr.outputs.pr_data }}'
+        run: |-
+          set -euo pipefail
+          CHANGED_FILES=$(echo "${PR_DATA}" | jq -r '.changedFiles // empty')
+          ADDITIONS=$(echo "${PR_DATA}" | jq -r '.additions // empty')
+          DELETIONS=$(echo "${PR_DATA}" | jq -r '.deletions // empty')
+          {
+            echo "## Gemini レビュー概要"
+            echo ""
+            echo "- PR番号: ${PR_NUMBER}"
+            echo "- 変更ファイル数: ${CHANGED_FILES}"
+            echo "- 追加行: ${ADDITIONS}"
+            echo "- 削除行: ${DELETIONS}"
+            echo ""
+            echo "詳細なレビューはこのPRのコメントに投稿しました。"
+          } >> "${GITHUB_STEP_SUMMARY}"
 
       - name: 'Post PR review failure comment'
         if: |-
