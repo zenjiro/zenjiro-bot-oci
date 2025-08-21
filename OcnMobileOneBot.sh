@@ -6,6 +6,10 @@ green=🟢
 white=⚪
 url="https://support.ocn.ne.jp/$(curl -s -S https://support.ocn.ne.jp/mobile-one/ | grep 現在対応中の工事・故障情報 -A 9 | tail -1 | sed -E -e 's/.+<a href=\"([^\"]+)\".+/\1/')/"
 raw_content=$(curl -s -S "$url")
+if [ -z "$raw_content" ]; then
+	echo "Error: Failed to fetch content from $url" >&2
+	exit 1
+fi
 timestamp=$(date +"%Y%m%d-%H%M%S")
 log_file="ocnmobileonebot-${timestamp}.log"
 latest_log=$(ls -t ocnmobileonebot-*.log 2>/dev/null | head -1)
