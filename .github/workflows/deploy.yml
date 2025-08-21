@@ -21,7 +21,14 @@ jobs:
           set -e
           cd ${{ secrets.OCI_BOT_DIRECTORY || '/home/opc/zenjiro-bot-oci' }}
           echo "Creating backup..."
-          cp -r . ../zenjiro-bot-oci-backup-$(date +%Y%m%d-%H%M%S)
+          ts=$(date +%Y%m%d-%H%M%S)
+          dest=../zenjiro-bot-oci-backup-$ts
+          mkdir -p "$dest"
+          if command -v rsync >/dev/null 2>&1; then
+            rsync -a --exclude='.*-now' --exclude='.git' ./ "$dest"/ || true
+          else
+            tar -cf - . --exclude='.git' --exclude='.*-now' --ignore-failed-read | tar -xf - -C "$dest" || true
+          fi
           echo "Cleaning up old backups..."
           find .. -ignore_readdir_race -maxdepth 1 -type d -name 'zenjiro-bot-oci-backup-*' -mtime +7 -exec rm -rf {} + 2>/dev/null || true
           echo "Pulling latest changes from GitHub..."
