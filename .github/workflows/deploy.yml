@@ -23,7 +23,7 @@ jobs:
           echo "Creating backup..."
           cp -r . ../zenjiro-bot-oci-backup-$(date +%Y%m%d-%H%M%S)
           echo "Cleaning up old backups..."
-          find .. -name 'zenjiro-bot-oci-backup-*' -mtime +7 -exec rm -rf {} \;
+          find .. -ignore_readdir_race -maxdepth 1 -type d -name 'zenjiro-bot-oci-backup-*' -mtime +7 -exec rm -rf {} + 2>/dev/null || true
           echo "Pulling latest changes from GitHub..."
           git fetch origin
           git reset --hard origin/main
