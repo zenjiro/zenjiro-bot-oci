@@ -66,6 +66,15 @@ cd zenjiro-bot-oci
 ```
 
 ### 4. Python依存関係のインストール
+#### 推奨: uv を使用
+```bash
+# uv のインストール
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# requirements.txt を uv で反映
+~/.local/bin/uv pip install -r requirements.txt --system
+```
+
+#### 代替: 既存の pip を使用
 ```bash
 pip3 install -r requirements.txt --user
 ```
@@ -80,6 +89,15 @@ nano environment
 ### 6. 実行権限の設定
 ```bash
 chmod +x *.sh
+```
+
+### 7. uv 実行パスの確認（必要に応じて）
+run-all.sh は `uv run truncate.py` を呼び出します。`uv` が PATH にない場合は、フルパスを指定するか、PATH を通してください。
+```bash
+# 例: ログインシェルで有効化（インストーラの出力に合わせて調整）
+export PATH="$HOME/.local/bin:$PATH"
+which uv
+uv --version
 ```
 
 ## セキュリティ考慮事項
