@@ -1,8 +1,8 @@
 import sys
-import unicodedata
+from twitter_text import parse_tweet
 
-s = "".join(sys.stdin.readlines())
-for i in range(1, len(s)):
-    if sum([(1, 2)[unicodedata.east_asian_width(x) in "FWA"] for x in s[:-i]]) <= 280:
+s = "".join(sys.stdin.readlines()).rstrip()
+for i in range(0, len(s)):
+    if parse_tweet(s[:-i]).weightedLength <= 280:
         print(s[:-i])
         break

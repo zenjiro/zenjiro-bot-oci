@@ -14,7 +14,7 @@ function export_keys() {
 for script in *{b,B}ot.sh; do
 	echo "$script"
 	export_keys "$script"
-	bash "$script" | python3 truncate.py >."${MY_SCREEN_NAME}"-now
+	bash "$script" | uv run truncate.py >."${MY_SCREEN_NAME}"-now
 	if [[ "${MY_SCREEN_NAME,,}" =~ ^(ykhmfirebot|wimaxoutagebot|iijmiotrblbot|ocnmobileonebot)$ ]]; then
 		diff ."${MY_SCREEN_NAME}"-now ."${MY_SCREEN_NAME}"-last >/dev/null || (cat ."${MY_SCREEN_NAME}"-now && python3 post.py "${MY_SCREEN_NAME}" <."${MY_SCREEN_NAME}"-now)
 	else
