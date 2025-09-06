@@ -65,16 +65,17 @@ git clone https://github.com/YOUR_USERNAME/zenjiro-bot-oci.git
 cd zenjiro-bot-oci
 ```
 
-### 4. Python依存関係のインストール
-#### 推奨: uv を使用
+### 4. Python依存関係のインストール（uv 推奨）
 ```bash
 # uv のインストール
 curl -LsSf https://astral.sh/uv/install.sh | sh
-# requirements.txt を uv で反映
-~/.local/bin/uv pip install -r requirements.txt --system
+export PATH="$HOME/.local/bin:$PATH"
+
+# プロジェクト依存を同期（pyproject.toml / uv.lock に基づく）
+uv sync
 ```
 
-#### 代替: 既存の pip を使用
+#### 代替: 既存の pip を使用（非推奨）
 ```bash
 pip3 install -r requirements.txt --user
 ```

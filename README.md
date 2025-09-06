@@ -13,18 +13,18 @@ sudo apt install -y nkf jq curl
 curl -LsSf https://astral.sh/uv/install.sh | sh
 # もしくは https://github.com/astral-sh/uv の手順に従ってください
 
-# 依存関係の同期（uv プロジェクトがある場合）
-# プロジェクトに pyproject.toml がある場合
-# uv sync
+# 依存関係の同期（uv 推奨）
+# プロジェクトに pyproject.toml / uv.lock が含まれているため、まず同期
+uv sync
 
 # または requirements.txt を使う場合（uv pip を使用）
 uv pip install -r requirements.txt
 ```
 
-注意: truncate.py は twitter-text-python に依存します。uv の分離環境で実行されるため、依存が見つからない場合は、以下のいずれかで対応してください。
-- プロジェクトを uv 管理（pyproject.toml を用意し `uv sync` 実行）
-- 実行時に明示指定: `uv run --with twitter-text-python truncate.py`
-- あるいは system 環境に導入して `uv run --system truncate.py` を使用
+注意: truncate.py は twitter-text-parser に依存します。uv 環境で確実に動かすには、以下のいずれかを実施してください。
+- プロジェクトを uv 管理し `uv sync`（pyproject.toml/uv.lock に依存を定義済み）
+- 実行時に明示指定: `uv run --with twitter-text-parser --with setuptools truncate.py`
+- あるいは system 環境に導入して `uv run --system truncate.py` を使用（setuptools が必要）
 
 # 実行
 $ export $(xargs < environment) && ./run-all.sh
