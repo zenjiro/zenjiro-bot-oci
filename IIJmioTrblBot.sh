@@ -7,9 +7,10 @@ url="https://www.iijmio.jp"$(curl -s -S https://www.iijmio.jp/info/trouble/ | gr
 
 raw_content=$(curl -s -S "$url")
 timestamp=$(date +"%Y%m%d-%H%M%S")
-log_file="iijmiotrblbot-${timestamp}.log"
+mkdir -p logs
+log_file="logs/iijmiotrblbot-${timestamp}.log"
 
-latest_log=$(ls -t iijmiotrblbot-*.log 2>/dev/null | head -1)
+latest_log=$(ls -t logs/iijmiotrblbot-*.log 2>/dev/null | head -1)
 if ! [ -f "$latest_log" ] || ! printf "%s" "$raw_content" | diff -q "$latest_log" - >/dev/null 2>&1; then
 	printf "%s" "$raw_content" >"$log_file"
 fi

@@ -11,8 +11,9 @@ if [ -z "$raw_content" ]; then
 	exit 1
 fi
 timestamp=$(date +"%Y%m%d-%H%M%S")
-log_file="ocnmobileonebot-${timestamp}.log"
-latest_log=$(ls -t ocnmobileonebot-*.log 2>/dev/null | head -1)
+mkdir -p logs
+log_file="logs/ocnmobileonebot-${timestamp}.log"
+latest_log=$(ls -t logs/ocnmobileonebot-*.log 2>/dev/null | head -1)
 if ! [ -f "$latest_log" ] || ! printf "%s" "$raw_content" | diff -q "$latest_log" - >/dev/null 2>&1; then
 	printf "%s" "$raw_content" >"$log_file"
 fi
