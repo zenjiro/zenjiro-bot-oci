@@ -5,7 +5,7 @@ red=🔴
 green=🟢
 white=⚪
 url="https://support.ocn.ne.jp/$(curl -s -S https://support.ocn.ne.jp/mobile-one/ | grep 現在対応中の工事・故障情報 -A 9 | tail -1 | sed -E -e 's/.+<a href=\"([^\"]+)\".+/\1/')/"
-raw_content=$(curl -s -S "$url")
+raw_content=$(curl -s -S --location "$url")
 if [ -z "$raw_content" ]; then
 	echo "Error: Failed to fetch content from $url" >&2
 	exit 1
