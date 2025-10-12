@@ -17,6 +17,15 @@ latest_log=$(ls -t logs/ocnmobileonebot-*.log 2>/dev/null | head -1)
 if ! [ -f "$latest_log" ] || ! printf "%s" "$raw_content" | diff -q "$latest_log" - >/dev/null 2>&1; then
 	printf "%s" "$raw_content" >"$log_file"
 fi
+if printf "%s" "$raw_content" | grep -q -E 'ただいまメンテナンス中です|メンテナンス時間帯'; then
+	maint=$(printf "%s" "$raw_content" | tr -d '\r' | sed -n -E '/メンテナンス時間帯/{n;p;}' | sed -E 's/(<br>)+/\n/g' | sed -E 's/<[^>]+>//g' | sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//' | head -1)
+	if [ -n "$maint" ]; then
+		echo "${white}ただいまメンテナンス中です。メンテナンス時間帯: $maint"
+	else
+		echo "${white}ただいまメンテナンス中です。"
+	fi
+	exit 0
+fi
 result=$(printf "%s" "$raw_content" | grep '<h1 class="p-template__type1">' -A 20 | sed -E -e "s/(<br>)+/\n/g" -e "s/^\\s+//" -e "s/<[^>]+>//g" -e "/^$/d" | tail -n +3)
 display=$(sed -E '/^【更新】$/,/^-+$/d' <<<"$result")
 if tail -2 <<<"$result" | grep 回復済み >/dev/null; then
