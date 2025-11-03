@@ -10,6 +10,9 @@ on:
   issue_comment:
     types:
       - 'created'
+  pull_request:
+    types:
+      - 'opened'
   issues:
     types:
       - 'opened'
@@ -56,6 +59,19 @@ jobs:
             github.event.comment.author_association == 'OWNER' ||
             github.event.comment.author_association == 'MEMBER' ||
             github.event.comment.author_association == 'COLLABORATOR'
+          )
+        )
+      ) ||
+      (
+        github.event_name == 'pull_request' && github.event.action == 'opened' &&
+        contains(github.event.pull_request.body, '@gemini-cli') &&
+        !contains(github.event.pull_request.body, '/review') &&
+        !contains(github.event.pull_request.body, '/triage') &&
+        (
+          github.event.sender.type == 'User' && (
+            github.event.pull_request.author_association == 'OWNER' ||
+            github.event.pull_request.author_association == 'MEMBER' ||
+            github.event.pull_request.author_association == 'COLLABORATOR'
           )
         )
       ) ||
@@ -124,6 +140,10 @@ jobs:
             IS_PR="true"
           elif [[ "${EVENT_NAME}" == "pull_request_review_comment" ]]; then
             USER_REQUEST=$(echo "${EVENT_PAYLOAD}" | jq -r .comment.body)
+            ISSUE_NUMBER=$(echo "${EVENT_PAYLOAD}" | jq -r .pull_request.number)
+            IS_PR="true"
+          elif [[ "${EVENT_NAME}" == "pull_request" ]]; then
+            USER_REQUEST=$(echo "${EVENT_PAYLOAD}" | jq -r .pull_request.body)
             ISSUE_NUMBER=$(echo "${EVENT_PAYLOAD}" | jq -r .pull_request.number)
             IS_PR="true"
           fi
